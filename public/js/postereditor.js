@@ -22,6 +22,24 @@ $(document).ready(function() {
         addNewEventListeners($('header textarea'));
     });
 
+    $('#article_text').click(function(e) { 
+        showSaveBar();
+        e.stopPropagation();
+        if (editing != 'body') { 
+            editing = 'body';
+
+            var body = $('#article_text');
+            $('#article_text p').remove();
+            if (body.attr('data-edited')) { 
+                body.append('<textarea>' + body_markdown + '</textarea>');
+            } else { 
+                body.append('<textarea></textarea>');
+            }
+            $('#article_text textarea').focus();
+        }
+        addNewEventListeners($('#article_text textarea'));
+    });
+
     $('body').click(function(e) { 
         if (editing) { 
             e.stopPropagation();
@@ -35,6 +53,7 @@ $(document).ready(function() {
 
 var endpoint = "/save"; // Where to post to. 
 var editing = false; // What we're currently editing. 
+var body_markdown = null;
 
 /**
  * Saves the changes from a textbox back into a display-only HTML element.
@@ -46,6 +65,12 @@ function saveChanges(target) {
             h1.text($('header textarea').val());
             h1.attr('data-edited', 'true');
             $('header textarea').replaceWith(h1);
+            break;
+        case 'body':
+            body_markdown = $('#article_text textarea').val();
+            var converter = Markdown.getSanitizingConverter();
+            $('#article_text textarea').replaceWith(converter.makeHtml(body_markdown));
+            $('#article_text').attr('data-edited', 'true');
             break;
     }
 }

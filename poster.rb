@@ -12,8 +12,8 @@ class Poster
   include DataMapper::Resource
 
   property :id, Serial
-  property :title, String
-  property :image_url, String
+  property :title, Text
+  property :image_url, Text
   property :body, Text
   property :footer, Text
   property :created_at, DateTime
@@ -21,7 +21,6 @@ class Poster
 end
 
 DataMapper.auto_upgrade!
-
 
 
 get '/' do
