@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>The EMFCamp Poster Generator</title>
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/text.css" />
+    <link rel="stylesheet" href="/css/960.css" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="/js/postereditor.js"></script>
+  </head>
+  <body>
+    <div class="container_12">
+      <div id="save_bar"><p>Finished editing?</p> <form action="/save" method="post"><input type="submit" name="submit" value="Save" /></form></div>
+      <script>$('#save_bar').hide();</script>
+      <header>
+        <h1><%= @poster.title ||= "The EMFCamp Poster Generator" %></h1>
+        <% if !@poster.title %><h2>Click here to edit</h2><% end %>
+      </header>
+
+      <article>
+        <div class="grid_5">
+          <figure>
+            <img src="http://placekitten.com/g/400/300" />
+            <figcaption>Click the image to change it.</figcaption>
+          </figure>
+        </div>
+        <div class="grid_6 prefix_1" id="article_text">
+          <p>Click here to edit this!</p>
+          <p>Terry richardson cardigan nihil culpa retro. Accusamus pork belly elit semiotics, irure consequat chambray. Jean shorts DIY aute skateboard duis, brooklyn bespoke laborum voluptate banh mi stumptown cillum dolor sint chambray. Hoodie butcher high life shoreditch, sustainable sartorial assumenda 3 wolf moon readymade raw denim eiusmod mollit squid. Typewriter ut cardigan, pour-over sustainable 8-bit sartorial reprehenderit magna. Narwhal iphone sint irure, dreamcatcher hoodie ennui cardigan. Irony thundercats consequat sed, accusamus mollit keytar pork belly master cleanse sriracha non consectetur viral reprehenderit 3 wolf moon.</p>
+          <p>
+          Ennui art party etsy, chillwave tofu freegan shoreditch mlkshk consequat retro helvetica you probably haven't heard of them vero hella quis. Laborum fap mollit accusamus. Proident lo-fi culpa pickled, do helvetica elit vinyl next level adipisicing. Gluten-free cupidatat exercitation gastropub shoreditch biodiesel. +1 williamsburg cillum photo booth hoodie occupy, whatever chillwave minim aliqua. Polaroid nesciunt letterpress biodiesel. Mumblecore esse banh mi, sriracha sint velit authentic ea quinoa nulla cillum retro ad.</p>
+        </div>
+        <div class="clear"></div>
+      </article>
+
+      <footer>
+      <p>Built by <a href="http://alexpounds.com/">Alex Pounds</a>. You can click the footer to change it, too. <span id="poster_strap">Make your own at <span id="poster_url"></span></span></p>
+      <script>$("#poster_url").text(window.location.href);</script>
+      </footer>
+    </div>
+  </body>
+</html>
+
+
