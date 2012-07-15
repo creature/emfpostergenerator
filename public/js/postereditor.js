@@ -1,6 +1,7 @@
 var endpoint = "/save"; // Where to post to. 
 var editing = false; // What we're currently editing. 
 var body_markdown = "";
+var undo = null;
 
 $(document).ready(function() { 
     // Set up AJAX form submission.
@@ -17,8 +18,9 @@ $(document).ready(function() {
         if (editing != 'image') { 
             editing = 'image'; 
             var figure = $('figure');
-            var editor = $('#image_edit');
+            var editor = $('#image_edit').clone();
 
+            undo = figure.contents();
             figure.empty();
             figure.append(editor);
             editor.show();
@@ -51,6 +53,7 @@ function clickToEditHandler(click, name, container, contentFunc, newlinesAllowed
     if (editing != name) { 
         editing = name;
 
+        undo = container.contents();
         var contents = contentFunc().trim();
         var container_height = container.height();
         container.empty();
@@ -67,43 +70,65 @@ function clickToEditHandler(click, name, container, contentFunc, newlinesAllowed
     }
 }
 
-
 /**
  * Saves the changes from a textbox back into a display-only HTML element.
  */
 function saveChanges(editor, target) { 
     var container;
+    var content = renderContent(editor, target);
     switch (target) { 
         case 'header':
             container = $('header');
-            var h1 = $('<h1>');
-            h1.text(editor.val());
-            editor.replaceWith(h1);
+            editor.replaceWith(content);
             break;
         case 'image': 
             container = $('figure');
-            var img = $('<img>');
-            img.attr('src', editor.val());
             container.empty();
-            container.append(img);
+            container.append(content);
             break;
         case 'body':
             container = $('#article_text');
-            body_markdown = editor.val();
-            var converter = Markdown.getSanitizingConverter();
-            editor.replaceWith(converter.makeHtml(body_markdown));
+            editor.replaceWith(content);
             break;
         case 'footer': 
             container = $('footer'); 
-            var p = $('<p>');
-            p.text(editor.val());
-            editor.replaceWith(p);
+            editor.replaceWith(content);
             break;
     }
     editing = false;
     container.attr('data_edited', 'true');
 }
 
+function rollback(container) {
+    container.empty();
+    container.append(undo);
+    editing = false;
+}
+
+
+function renderContent(editor, target) { 
+    switch (target) {
+        case 'header': 
+            var h1 = $('<h1>');
+            h1.text(editor.val());
+            return h1;
+            break;
+        case 'image':
+            var img = $('<img>');
+            img.attr('src', editor.val());
+            return img;
+            break;
+        case 'footer':
+            var p = $('<p>');
+            p.text(editor.val());
+            return p;
+        case 'body':
+            body_markdown = editor.val();
+            var converter = Markdown.getSanitizingConverter();
+            return converter.makeHtml(body_markdown);
+            break;
+    }
+}
 
 /**
  * Shows the save prompt if it's currently hidden.
@@ -122,11 +147,15 @@ function showSaveBar() {
 function addSaveListeners(el, newlinesAllowed) { 
     el.blur(function() { saveChanges(el, editing); });
     if (!newlinesAllowed) { 
-        el.keydown(function(ev) { if (13 == ev.which) { saveChanges(el, editing); }});
+        el.keydown(function(ev) { 
+            if (13 == ev.which) { saveChanges(el, editing); }
+            if (27 == ev.which) { rollback(el.parent()); }
+        });
     }
 }
 
 function addAutoSizeListeners(editor, container) { 
+
 }
 
 /**
