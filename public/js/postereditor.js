@@ -136,7 +136,7 @@ function renderContent(editor) {
         case 'body':
             body_markdown = editor.val();
             var converter = Markdown.getSanitizingConverter();
-            return converter.makeHtml(body_markdown);
+            return $(converter.makeHtml(body_markdown));
             break;
     }
 }
