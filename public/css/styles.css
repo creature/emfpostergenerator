@@ -1,9 +1,12 @@
-@import url(http://fonts.googleapis.com/css?family=Squada+One);
+@font-face { 
+    font-family: typiqal;
+    src: url('/TypiqalMono-Medium.otf');
+}
 
 body { 
     background-color: #000BA0;
     color: white;
-    font-family: 'Squada One', 'Courier New', monospace;
+    font-family: typiqal, 'Courier New', monospace;
 }
 
 #save_bar { 

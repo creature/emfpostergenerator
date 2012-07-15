@@ -1,12 +1,12 @@
 #!`which ruby` -rubygems
-
 require 'sinatra'
 require 'sinatra/reloader' if development?
-require 'data_mapper'
-
+require 'data_mapper' 
+require 'sanitize'
+require 'kramdown' 
 
 DataMapper::Logger.new($stdout, :debug)
-DataMapper.setup(:default, 'sqlite::memory:')
+DataMapper.setup(:default, 'sqlite:posters.sqlite')
 
 class Poster
   include DataMapper::Resource
@@ -18,8 +18,18 @@ class Poster
   property :footer, Text
   property :created_at, DateTime
   property :ip, String
+
+  def body
+    text = self[:body] || ""
+    Sanitize.clean(Kramdown::Document.new(text).to_html, Sanitize::Config::RELAXED)
+  end
+
+  def get_markdown
+    self[:body]
+  end
 end
 
+DataMapper.finalize
 DataMapper.auto_upgrade!
 
 
