@@ -47,6 +47,10 @@ $(document).ready(function() {
     });
 });
 
+/**
+ * Handles turning a content area into an editing area, including setting
+ * up heights and adding relevant event listeners.
+ */
 function clickToEditHandler(click, name, container, contentFunc, newlinesAllowed) { 
     showSaveBar();
     click.stopPropagation();
@@ -99,15 +103,22 @@ function saveChanges(editor, target) {
     container.attr('data_edited', 'true');
 }
 
+/**
+ * Reverts the changes, typically when the user hits escape.
+ */
 function rollback(container) {
     container.empty();
     container.append(undo);
     editing = false;
 }
 
-
-function renderContent(editor, target) { 
-    switch (target) {
+/**
+ * Takes the content in the editor and renders it into HTML. 
+ * We use this both to insert the content post-editing and to 
+ * measure the size of it for auto-resizing of the content area.
+ */
+function renderContent(editor) { 
+    switch (editing) {
         case 'header': 
             var h1 = $('<h1>');
             h1.text(editor.val());
@@ -154,8 +165,21 @@ function addSaveListeners(el, newlinesAllowed) {
     }
 }
 
-function addAutoSizeListeners(editor, container) { 
 
+/** 
+ * Checks the size of the editor area, and alters it if it gets bigger. 
+ */
+function addAutoSizeListeners(editor, container) { 
+    editor.keyup(function(ev) { 
+        var content = renderContent(editor);
+        content.hide();
+        container.append(content);
+        var fudgeFactor = 50;
+        if (content.height() + fudgeFactor > editor.height()) { 
+            editor.height(content.height() + fudgeFactor);
+        }
+        content.detach();
+    });
 }
 
 /**
