@@ -10,7 +10,7 @@
     <script src="/js/markdown.converter.js"></script>
     <script src="/js/markdown.sanitizer.js"></script>
     <script src="/js/postereditor.js"></script>
-    <% if @poster.id %><script>body_markdown = "<%= @poster.get_markdown.gsub(/\n/, "\\\n") %>";</script><% end %>
+    <% if @poster.id %><script>body_markdown = "<%= @poster.get_markdown.gsub(/\n/, "\\n") %>";</script><% end %>
   </head>
   <body>
     <div class="container_12">
