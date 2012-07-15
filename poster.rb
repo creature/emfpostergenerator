@@ -1,4 +1,5 @@
 #!`which ruby` -rubygems
+require 'bundler/setup'
 require 'sinatra'
 require 'sinatra/reloader' if development?
 require 'data_mapper' 
