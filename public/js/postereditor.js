@@ -45,6 +45,18 @@ $(document).ready(function() {
             editing = false;
         }
     });
+
+    // Add CSS changer. 
+    $('#css_changer').click(function(e) { 
+        e.preventDefault();
+        var sheets = ['/css/whiteonblue.css', '/css/blueonwhite.css', '/css/blackonwhite.css'];
+        var stylesheet = $('#colorscheme');
+        var currentlySelected = stylesheet.attr('href'); 
+        var i = sheets.indexOf(currentlySelected);
+        if (i > -1) { 
+            stylesheet.attr('href', sheets[(i+1) % sheets.length]);
+        }
+    });
 });
 
 /**
@@ -204,6 +216,7 @@ function submitForm(e) {
     payload['image_url'] = $('figure img').attr('src');
     payload['body'] = body_markdown;
     payload['footer'] = $('footer p').text();
+    payload['stylesheet'] = $('#colorscheme').attr('src');
 
     $.post($(e.target).attr('action'), payload, function(result) { 
         $('#save_bar p').text("Saved! Your poster is available at http://" + window.location.host + "/" + result);

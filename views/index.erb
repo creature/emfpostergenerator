@@ -5,7 +5,8 @@
     <link rel="stylesheet" href="/css/reset.css" />
     <link rel="stylesheet" href="/css/text.css" />
     <link rel="stylesheet" href="/css/960.css" />
-    <link rel="stylesheet" href="/css/styles.css" />
+    <link id="colorscheme" rel="stylesheet" href="/css/whiteonblue.css" />
+    <link rel="stylesheet" media="print" href="/css/print.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="/js/markdown.converter.js"></script>
     <script src="/js/markdown.sanitizer.js"></script>
@@ -15,6 +16,7 @@
   <body>
     <div class="container_12">
       <div id="save_bar"><p>Finished editing?</p> <form action="/save" method="post"><input type="submit" name="submit" value="Save" /></form></div>
+      <div id="css_changer"><p>Change colour scheme</p></div>
       <script>$('#save_bar').hide();</script>
       <header <% if @poster.id %>data_edited="true"<% end %>>
         <h1><%= @poster.title || "The EMFCamp Poster Generator" %></h1>
@@ -22,7 +24,7 @@
       </header>
 
       <article>
-      <div class="grid_5">
+      <div class="grid_7">
         <form id="image_edit" action="#" style="display: none;">
           <input type="text" name="url" id="image_url" />
           <p>Enter a URL to an image in the field above.</p>
@@ -31,12 +33,12 @@
           <% if @poster.image_url %>
             <img src="<%= @poster.image_url %>" />
           <% else %>
-            <img src="http://placekitten.com/g/400/300" />
+            <img src="http://placekitten.com/g/570/390" />
             <figcaption>Click the image to change it.</figcaption>
           <% end %>
           </figure>
         </div>
-        <div class="grid_6 prefix_1" id="article_text" <% if @poster.id %>data_edited="true"<% end %>>
+        <div class="grid_4 prefix_1" id="article_text" <% if @poster.id %>data_edited="true"<% end %>>
           <% if @poster.body != "" %>
             <%= @poster.body %>
           <% else %>
@@ -49,7 +51,7 @@
       </article>
 
       <footer>
-      <p><%= @poster.footer || 'Built by <a href="http://alexpounds.com/">Alex Pounds</a>. You can click the footer to change it, too.' %>
+      <p><%= @poster.footer || 'Poster generator built by <a href="http://alexpounds.com/">Alex Pounds</a>. You can click the footer to change it, too.' %>
       <span id="poster_strap"><% if @poster.id %>View this online at <% else %>Make your own at <% end %><span id="poster_url"></span></span></p>
       <script>$("#poster_url").text(window.location.href);</script>
       </footer>

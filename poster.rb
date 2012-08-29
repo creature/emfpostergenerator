@@ -17,6 +17,7 @@ class Poster
   property :image_url, Text
   property :body, Text
   property :footer, Text
+  property :stylesheet, Integer
   property :created_at, DateTime
   property :ip, String
 
