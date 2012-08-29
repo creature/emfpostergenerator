@@ -138,6 +138,12 @@ function renderContent(editor) {
             var converter = Markdown.getSanitizingConverter();
             return $(converter.makeHtml(body_markdown));
             break;
+        case 'footer': 
+            var p = $('<p>');
+            p.text($('footer textarea').val());
+            $('footer').attr('data-edited', 'true');
+            $('footer textarea').replaceWith(p);
+            break;
     }
 }
 
