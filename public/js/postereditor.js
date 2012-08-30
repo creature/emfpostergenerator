@@ -216,7 +216,7 @@ function submitForm(e) {
     payload['image_url'] = $('figure img').attr('src');
     payload['body'] = body_markdown;
     payload['footer'] = $('footer p').text();
-    payload['stylesheet'] = $('#colorscheme').attr('src');
+    payload['stylesheet'] = $('#colorscheme').attr('href');
 
     $.post($(e.target).attr('action'), payload, function(result) { 
         $('#save_bar p').text("Saved! Your poster is available at http://" + window.location.host + "/" + result);

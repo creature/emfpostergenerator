@@ -10,6 +10,8 @@ DataMapper::Logger.new($stdout, :debug)
 DataMapper.setup(:default, 'sqlite:posters.sqlite')
 
 class Poster
+  CSS_FILES = {1 => '/css/whiteonblue.css', 2 => '/css/blueonwhite.css', 3 => '/css/blackonwhite.css'}
+
   include DataMapper::Resource
 
   property :id, Serial
@@ -28,6 +30,14 @@ class Poster
 
   def get_markdown
     self[:body]
+  end
+
+  def stylesheet
+    Poster::CSS_FILES[self[:stylesheet]]
+  end
+
+  def stylesheet=(css_path)
+    self[:stylesheet] = Poster::CSS_FILES.index(css_path)
   end
 end
 
@@ -54,6 +64,7 @@ post '/save' do
                        :image_url => params['image_url'], 
                        :body => params['body'], 
                        :footer => params['footer'], 
+                       :stylesheet => params['stylesheet'],
                        :created_at => Time.now, 
                        :ip => request.ip)
   if @poster.save
