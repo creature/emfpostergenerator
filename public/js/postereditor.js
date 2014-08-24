@@ -1,22 +1,22 @@
-var endpoint = "/save"; // Where to post to. 
-var editing = false; // What we're currently editing. 
+var endpoint = "/save"; // Where to post to.
+var editing = false; // What we're currently editing.
 var body_markdown = "";
 var undo = null;
 
-$(document).ready(function() { 
+$(document).ready(function() {
     // Set up AJAX form submission.
     $('#save_bar form').submit(submitForm);
 
-    // Register click-to-edit functions. 
-    $('header').click(function(e) { 
+    // Register click-to-edit functions.
+    $('header').click(function(e) {
         clickToEditHandler(e, 'header', $('header'), function f() { return $('header h1').text(); }, false);
     });
 
-    $('figure').click(function(e) { 
+    $('figure').click(function(e) {
         showSaveBar();
         e.stopPropagation();
-        if (editing != 'image') { 
-            editing = 'image'; 
+        if (editing != 'image') {
+            editing = 'image';
             var figure = $('figure');
             var editor = $('#image_edit').clone();
 
@@ -30,30 +30,30 @@ $(document).ready(function() {
         }
     });
 
-    $('#article_text').click(function(e) { 
+    $('#article_text').click(function(e) {
         clickToEditHandler(e, 'body', $('#article_text'), function f() { return body_markdown; }, true);
     });
-    
-    $('footer').click(function(e) { 
+
+    $('footer').click(function(e) {
         clickToEditHandler(e, 'footer', $('footer'), function f() { return $('footer').text(); }, false);
     });
 
-    $('body').click(function(e) { 
-        if (editing) { 
+    $('body').click(function(e) {
+        if (editing) {
             e.stopPropagation();
             saveChanges(editing);
             editing = false;
         }
     });
 
-    // Add CSS changer. 
-    $('#css_changer').click(function(e) { 
+    // Add CSS changer.
+    $('#css_changer').click(function(e) {
         e.preventDefault();
         var sheets = ['/css/whiteonblue.css', '/css/blueonwhite.css', '/css/blackonwhite.css'];
         var stylesheet = $('#colorscheme');
-        var currentlySelected = stylesheet.attr('href'); 
+        var currentlySelected = stylesheet.attr('href');
         var i = sheets.indexOf(currentlySelected);
-        if (i > -1) { 
+        if (i > -1) {
             stylesheet.attr('href', sheets[(i+1) % sheets.length]);
         }
     });
@@ -63,19 +63,19 @@ $(document).ready(function() {
  * Handles turning a content area into an editing area, including setting
  * up heights and adding relevant event listeners.
  */
-function clickToEditHandler(click, name, container, contentFunc, newlinesAllowed) { 
+function clickToEditHandler(click, name, container, contentFunc, newlinesAllowed) {
     showSaveBar();
     click.stopPropagation();
-    if (editing != name) { 
+    if (editing != name) {
         editing = name;
 
         undo = container.contents();
         var contents = contentFunc().trim();
         var container_height = container.height();
         container.empty();
-        if (container.attr('data_edited')) { 
+        if (container.attr('data_edited')) {
             container.append('<textarea>' + contents + '</textarea>');
-        } else { 
+        } else {
             container.append('<textarea></textarea>');
         }
         editor = container.find('textarea');
@@ -89,15 +89,15 @@ function clickToEditHandler(click, name, container, contentFunc, newlinesAllowed
 /**
  * Saves the changes from a textbox back into a display-only HTML element.
  */
-function saveChanges(editor, target) { 
+function saveChanges(editor, target) {
     var container;
     var content = renderContent(editor, target);
-    switch (target) { 
+    switch (target) {
         case 'header':
             container = $('header');
             editor.replaceWith(content);
             break;
-        case 'image': 
+        case 'image':
             container = $('figure');
             container.empty();
             container.append(content);
@@ -106,8 +106,8 @@ function saveChanges(editor, target) {
             container = $('#article_text');
             editor.replaceWith(content);
             break;
-        case 'footer': 
-            container = $('footer'); 
+        case 'footer':
+            container = $('footer');
             editor.replaceWith(content);
             break;
     }
@@ -125,13 +125,13 @@ function rollback(container) {
 }
 
 /**
- * Takes the content in the editor and renders it into HTML. 
- * We use this both to insert the content post-editing and to 
+ * Takes the content in the editor and renders it into HTML.
+ * We use this both to insert the content post-editing and to
  * measure the size of it for auto-resizing of the content area.
  */
-function renderContent(editor) { 
+function renderContent(editor) {
     switch (editing) {
-        case 'header': 
+        case 'header':
             var h1 = $('<h1>');
             h1.text(editor.val());
             return h1;
@@ -150,7 +150,7 @@ function renderContent(editor) {
             var converter = Markdown.getSanitizingConverter();
             return $(converter.makeHtml(body_markdown));
             break;
-        case 'footer': 
+        case 'footer':
             var p = $('<p>');
             p.text($('footer textarea').val());
             $('footer').attr('data-edited', 'true');
@@ -162,9 +162,9 @@ function renderContent(editor) {
 /**
  * Shows the save prompt if it's currently hidden.
  */
-function showSaveBar() { 
+function showSaveBar() {
     var hiddenBar = $('#save_bar:hidden');
-    if (hiddenBar) { 
+    if (hiddenBar) {
         hiddenBar.slideDown();
     }
 }
@@ -173,10 +173,10 @@ function showSaveBar() {
 /**
  * Adds an event listener on our new editor to hook into enter to save, where appropriate.
  */
-function addSaveListeners(el, newlinesAllowed) { 
+function addSaveListeners(el, newlinesAllowed) {
     el.blur(function() { saveChanges(el, editing); });
-    if (!newlinesAllowed) { 
-        el.keydown(function(ev) { 
+    if (!newlinesAllowed) {
+        el.keydown(function(ev) {
             if (13 == ev.which) { saveChanges(el, editing); }
             if (27 == ev.which) { rollback(el.parent()); }
         });
@@ -184,16 +184,16 @@ function addSaveListeners(el, newlinesAllowed) {
 }
 
 
-/** 
- * Checks the size of the editor area, and alters it if it gets bigger. 
+/**
+ * Checks the size of the editor area, and alters it if it gets bigger.
  */
-function addAutoSizeListeners(editor, container) { 
-    editor.keyup(function(ev) { 
+function addAutoSizeListeners(editor, container) {
+    editor.keyup(function(ev) {
         var content = renderContent(editor);
         content.hide();
         container.append(content);
         var fudgeFactor = 50;
-        if (content.height() + fudgeFactor > editor.height()) { 
+        if (content.height() + fudgeFactor > editor.height()) {
             editor.height(content.height() + fudgeFactor);
         }
         content.detach();
@@ -203,9 +203,9 @@ function addAutoSizeListeners(editor, container) {
 /**
  * Submits our new poster to the server.
  */
-function submitForm(e) { 
+function submitForm(e) {
     e.preventDefault();
-    
+
     // Make spinner.
     var button = $('#save_bar input');
     button.attr('value', 'Saving...');
@@ -218,8 +218,12 @@ function submitForm(e) {
     payload['footer'] = $('footer p').text();
     payload['stylesheet'] = $('#colorscheme').attr('href');
 
-    $.post($(e.target).attr('action'), payload, function(result) { 
+    $.post($(e.target).attr('action'), payload, function(result) {
         $('#save_bar p').text("Saved! Your poster is available at http://" + window.location.host + "/" + result);
+        button.attr('value', 'Save');
+        button.removeAttr('disabled');
+    }).fail(function() {
+        $('#save_bar p').text("Couldn't save poster. :( Try again?");
         button.attr('value', 'Save');
         button.removeAttr('disabled');
     });

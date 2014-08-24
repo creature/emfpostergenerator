@@ -67,6 +67,6 @@ post '/save' do
   if @poster.save
     @poster.id.to_s
   else
-    "fail"
+    422 # Return HTTP 422, Unprocessable Entity
   end
 end
