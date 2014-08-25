@@ -91,6 +91,7 @@ DEPENDENCIES
   data_mapper
   dm-sqlite-adapter
   kramdown
+  nokogiri
   sanitize
   sinatra
   sinatra-contrib

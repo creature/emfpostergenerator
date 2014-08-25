@@ -5,6 +5,8 @@ The EMF Poster Generator is a simple Sinatra & JavaScript app built for attendee
 
 It doesn't degrade gracefully and it won't work without JavaScript. It makes use of [960.gs](http://960.gs/) and [PageDown](http://code.google.com/p/pagedown/).
 
+A `config.ru` file is provided, so it should run out-of-the-box as a [Rack](http://rack.github.io/) app. You can try it out [on the web](http://demo.ethicsgirls.com/).
+
 
 Requirements
 ------------
@@ -16,12 +18,27 @@ Getting Started
 ---------------
 
 1. Get a copy of the source code. 
-2. Generate the required CSS files: 
-       cd public/css; sass blueonwhite.scss blueonwhite.css; sass blackonwhite.scss blackonwhite.css; sass whiteonblue.scss whiteonblue.css
-3. Run poster.rb: 
-       ruby poster.rb
+    ```
+    git clone git@github.com:creature/emfpostergenerator.git
+    cd emfpostergenerator
+    ```
+1. Grab the dependencies.
+    ```
+    bundle install
+    ```
+1. Generate the CSS files:
+    ```
+    cd public/css
+    sass blueonwhite.scss blueonwhite.css
+    sass blackonwhite.scss blackonwhite.css
+    sass whiteonblue.scss whiteonblue.css
+    ```
+1. Run `poster.rb`:
+    ```
+    ruby poster.rb
+    ```
 
-You'll now have a server running on http://localhost:4567. Visiting that URL in your web browser should show you the poster generator.
+You'll now have a server running on [http://localhost:4567](http://localhost:4567). Visiting that URL in your web browser should show you the poster generator.
 
 
 System Tour

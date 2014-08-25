@@ -1,0 +1,6 @@
+public/css/*.css # Generated from Sass
+*.sqlite # Don't version-control the DB.
+.sass-cache
+blackonwhite.css
+blueonwhite.css
+whiteonblue.css
